@@ -16,7 +16,6 @@
         this.init = function init(data, configs) {
             this.configs = configs;
             this.data    = data;
-            console.log(configs);
 
             var lines = this.constructLegend(data, _this.configs.colors);
 
@@ -38,10 +37,11 @@
             var posy  = _this.configs.pos.y;
 
             data.forEach(function(serie, k) {
-                var pict = paper
+                var color = serie.color || colors[k];
+                var pict  = paper
                     .circle(posx, posy - 5, 5)
                     .attr({
-                        fill : colors[k]
+                        fill : color
                     });
 
                 var text = paper

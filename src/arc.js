@@ -10,7 +10,7 @@
  */
 
 (function(window) {
-    var Arc = function Arc(data, from, color, configs, _paper, _centerXP, _centerYP) {
+    var Arc = function Arc(data, from, _color, configs, _paper, _centerXP, _centerYP) {
 
         var _this     = this;
         var paper      = _paper;
@@ -27,6 +27,7 @@
         this.init = function() {
 
             // Initialisation lier à l'animation de la path
+            var color        = data.color || _color;
             var total        = data.percent;
             var percent      = (total / 100) * 360;
             var radplus      = 5;
