@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>SVG Round</title>
+        <style media="screen">
+            #svg { width : 600px; height : 600px; background-color: #F0F0F0; }
+        </style>
+    </head>
+    <body>
+        <svg id="svg"></svg>
+
+        <script src="../node_modules/snapsvg/dist/snap.svg-min.js"></script>
+        <script src="../node_modules/lodash/index.js"></script>
+
+        <!-- build:jsLibs() ../dist/roundify.min.js -->
+            <script src="../src/roundify.js"></script>
+            <script src="../src/arc.js"></script>
+            <script src="../src/round.js"></script>
+            <script src="../src/legend.js"></script>
+            <script src="../src/main.data.js"></script>
+        <!--  endbuild -->
+
+        <script>
+            /**
+             * Initialisation
+             *
+             */
+            var data = [
+                {
+                    value : 3210,
+                    name  : 'seo'
+                },
+                {
+                    value : 600,
+                    name  : 'sea'
+                },
+                {
+                    value : 2902,
+                    name  : 'direct'
+                }
+            ];
+
+            var options = {
+                circle : {
+                    radius    : 100,
+                    animation : {
+                        type : 'false'
+                    }
+                }
+            };
+
+            var round = new Roundify(data, options);
+        </script>
+    </body>
+</html>

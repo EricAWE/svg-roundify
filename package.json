@@ -1,0 +1,29 @@
+{
+  "name": "roundify",
+  "version": "0.1.0",
+  "description": "Circle Widget for representing data. Make with snap.svg",
+  "keywords": [
+    "roundify",
+    "svg",
+    "chart",
+    "snap.svg"
+  ],
+  "main": "dist/roundify.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eric Berlin",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-load-plugins": "^0.10.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.0",
+    "gulp-usemin": "^0.3.14"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "snapsvg": "^0.4.0"
+  }
+}
