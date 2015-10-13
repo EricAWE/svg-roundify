@@ -118,3 +118,7 @@ var Roundify = function Roundify(id, data, configs) {
 
     this.init();
 };
+
+var roundify = function(id, data, configs) {
+    return new Roundify(id, data, configs);
+};
