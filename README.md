@@ -1,4 +1,4 @@
-roundify
+svg-roundify
 ===
 
 Lightweight svg round chart built with snapsvg
