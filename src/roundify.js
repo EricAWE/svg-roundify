@@ -7,11 +7,11 @@
  *    - Possibilité d'intégrer un chiffre middle
  *
  */
-var paper = Snap('#svg');
-var centerXP = document.getElementById('svg').offsetWidth / 2;
-var centerYP = document.getElementById('svg').offsetHeight / 2;
 
-var Roundify = function Roundify(data, configs) {
+var Roundify = function Roundify(id, data, configs) {
+    var paper    = Snap('#' + id);
+    var centerXP = document.getElementById(id).offsetWidth / 2;
+    var centerYP = document.getElementById(id).offsetHeight / 2;
     var _this      = this;
     this.configs   = {};
     this.round     = new RoundifyCircle(paper, centerXP, centerYP);
