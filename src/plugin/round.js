@@ -32,6 +32,7 @@
         this.init = function(_data, configs) {
 
             this.configs = configs;
+            var round    = paper.g();
             // 2. Calcul la data en pourcentage
             var data = this.convertToPercent(_data);
 
@@ -39,6 +40,8 @@
             data.forEach(function(v, k) {
                 _this.arcs.push(new Arc(v, _this.configs.nowPoint, _this.configs.colors[k], _this.configs, _paper, _centerXP, _centerYP));
                 _this.configs.nowPoint = _this.arcs[k].getEndPoint();
+
+                round.add(_this.arcs[k].draw);
             });
 
             // 4. Met un setTimeout et lance l'animation
@@ -46,6 +49,8 @@
             setTimeout(function() {
                 _this.animate();
             }, 200);
+
+            return round;
         };
 
         /**

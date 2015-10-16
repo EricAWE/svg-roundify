@@ -23,6 +23,7 @@
     "gulp-usemin": "^0.3.14"
   },
   "dependencies": {
+    "angular": "^1.4.7",
     "lodash": "^3.10.1",
     "snapsvg": "^0.4.0"
   }

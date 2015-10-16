@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="Demo">
     <head>
         <meta charset="utf-8">
         <title>SVG Round</title>
-        <style media="screen">
-            #svg { width : 600px; height : 600px; background-color: #F0F0F0; }
+        <style>
+            .hey { width : 600px; height : 600px; background-color: #F0F0F0; }
         </style>
     </head>
     <body>
-        <svg id="svg"></svg>
-
+        <script src="../node_modules/angular/angular.min.js"></script>
         <script src="../node_modules/snapsvg/dist/snap.svg-min.js"></script>
         <script src="../node_modules/lodash/index.js"></script>
 
         <!-- build:jsLibs() ../dist/roundify.min.js -->
-            <script src="../src/roundify.js"></script>
-            <script src="../src/arc.js"></script>
-            <script src="../src/round.js"></script>
-            <script src="../src/legend.js"></script>
-            <script src="../src/main.data.js"></script>
+            <script src="../src/plugin/roundify.js"></script>
+            <script src="../src/plugin/arc.js"></script>
+            <script src="../src/plugin/round.js"></script>
+            <script src="../src/plugin/legend.js"></script>
+            <script src="../src/plugin/main.data.js"></script>
+            <script src="../src/directive/roundify.directive.js"></script>
         <!--  endbuild -->
 
         <script>
@@ -53,7 +53,21 @@
                 }
             };
 
-            roundify('svg', data, options);
+            var app = angular.module( 'Demo', ['svgRoundify'] );
+                angular
+                    .module('Demo')
+                    .controller('DemoController', demoController);
+
+            demoController.$inject = ['$scope'];
+
+            function demoController($scope) {
+                $scope.rounddata = {data : data, options : options};
+            }
+            //roundify(data, options);
         </script>
+
+        <div ng-controller="DemoController as demoController">
+            <svg-roundify config="rounddata" id="hey"></svg-roundify>
+        </div>
     </body>
 </html>

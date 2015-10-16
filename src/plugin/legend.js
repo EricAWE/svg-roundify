@@ -26,6 +26,8 @@
                 .animate({
                     opacity : 1
                 }, 600);
+
+            return lines;
         };
 
         this.constructLegend = function constructLegend(data, colors) {
