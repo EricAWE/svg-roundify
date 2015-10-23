@@ -13,16 +13,15 @@
             link     : svgRoundifyLink,
             restrict : 'E',
             scope    : {
-                config : '='
+                config : '=',
+                svgId  : '=svgId'
             }
         };
 
         return directive;
 
         function svgRoundifyLink(scope, element) {
-            var id     = element.attr('id');
-            var $round = element.append('<svg class="' + id + '"></svg>').children();
-
+            var $round = element.append('<svg class="svg-round"></svg>').children();
             $round.roundify(scope.config.data, scope.config.options);
         }
     }
@@ -410,8 +409,8 @@
         var uniqNclass = element.attr('class');
         var paper      = Snap('.' + uniqNclass);
 
-        var W          = document.querySelectorAll('.' + uniqNclass)[0].clientWidth;
-        var H          = document.querySelectorAll('.' + uniqNclass)[0].clientHeight;
+        var W          = configs.width  || document.querySelectorAll('.' + uniqNclass)[0].clientWidth;
+        var H          = configs.height || document.querySelectorAll('.' + uniqNclass)[0].clientHeight;
         var centerXP   = W / 2;
         var centerYP   = H / 2;
         var _this      = this;

@@ -13,16 +13,15 @@
             link     : svgRoundifyLink,
             restrict : 'E',
             scope    : {
-                config : '='
+                config : '=',
+                svgId  : '=svgId'
             }
         };
 
         return directive;
 
         function svgRoundifyLink(scope, element) {
-            var id     = element.attr('id');
-            var $round = element.append('<svg class="' + id + '"></svg>').children();
-
+            var $round = element.append('<svg class="svg-round"></svg>').children();
             $round.roundify(scope.config.data, scope.config.options);
         }
     }
