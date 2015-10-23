@@ -1,3 +1,34 @@
+(function() {
+
+    'use strict';
+
+    angular
+        .module('svgRoundify', [])
+        .directive('svgRoundify', svgRoundifyDirective);
+
+    svgRoundifyDirective.$inject = ['$filter', '$document'];
+
+    function svgRoundifyDirective() {
+        var directive = {
+            link     : svgRoundifyLink,
+            restrict : 'E',
+            scope    : {
+                config : '='
+            }
+        };
+
+        return directive;
+
+        function svgRoundifyLink(scope, element) {
+            var id     = element.attr('id');
+            var $round = element.append('<svg class="' + id + '"></svg>').children();
+
+            $round.roundify(scope.config.data, scope.config.options);
+        }
+    }
+
+})();
+
 'use strict';
 /**
  * Crée un arc snap.svg représentant
@@ -25,7 +56,6 @@
          *
          */
         this.init = function() {
-
             // Initialisation lier à l'animation de la path
             var color        = data.color || _color;
             var total        = data.percent;
@@ -122,14 +152,15 @@
             this.data    = data;
 
             var lines = this.constructLegend(data, _this.configs.colors);
-
             lines
                 .attr({
-                    transform : 'translate(0, -' + lines.getBBox().height / 2 + ')'
+                    transform : 'translate(0, -' + (lines.getBBox().height / 2 - 10) + ')'
                 })
                 .animate({
                     opacity : 1
                 }, 600);
+
+            return lines;
         };
 
         this.constructLegend = function constructLegend(data, colors) {
@@ -195,10 +226,13 @@
 
 })(window);
 
-'use strict';
-
 /**
  * Créer un cercle en fonction de la data passé
+ *
+ * TODO :
+ *    - Rendre responsive le widget
+ *        - L'adapter en pourcentage
+ *        - Le forcer à prendre la taille de son conteneur
  *
  * @param {Object} _data
  *    - value : valeur de la série
@@ -209,13 +243,13 @@
 
 
 (function(w) {
+    'use strict';
+
     var RoundifyCircle = function RoundifyCircle(_paper, _centerXP, _centerYP) {
 
         var _this      = this;
         var animePoint = 0;
         var paper      = _paper;
-        var centerXP   = _centerXP;
-        var centerYP   = _centerYP;
         this.arcs      = [];
         this.configs   = {};
 
@@ -229,6 +263,7 @@
         this.init = function(_data, configs) {
 
             this.configs = configs;
+            var round    = paper.g();
             // 2. Calcul la data en pourcentage
             var data = this.convertToPercent(_data);
 
@@ -236,6 +271,8 @@
             data.forEach(function(v, k) {
                 _this.arcs.push(new Arc(v, _this.configs.nowPoint, _this.configs.colors[k], _this.configs, _paper, _centerXP, _centerYP));
                 _this.configs.nowPoint = _this.arcs[k].getEndPoint();
+
+                round.add(_this.arcs[k].draw);
             });
 
             // 4. Met un setTimeout et lance l'animation
@@ -243,6 +280,8 @@
             setTimeout(function() {
                 _this.animate();
             }, 200);
+
+            return round;
         };
 
         /**
@@ -319,13 +358,12 @@
          */
         function animateParallel() {
             var arcs = _this.arcs;
-
             arcs.forEach(function(arc) {
                 Snap.animate(0, arc.loopLength,
                     function(step) {
                         arc.draw.attr({
                             path        : Snap.path.getSubpath(arc.path, 0, step),
-                            transform   : 'translate(' + _this.configs.pos.x * 2 + '), scale(-1, 1)',
+                            transform   : 'translate(' + _this.configs.pos.x * 2 + ' ' + (_this.configs.radius + 40) + ') scale(-1, 1)',
                             strokeWidth : _this.configs.stroke
                         });
                     },
@@ -356,127 +394,177 @@
     w.RoundifyCircle = RoundifyCircle;
 })(window);
 
-'use strict';
+(function() {
 
-/**
- * TODO :
- *    - Créer un objet widget comprenant Roundify
- *    - Possibilité de créer une légende
- *    - Possibilité d'intégrer un chiffre middle
- *
- */
-
-var Roundify = function Roundify(id, data, configs) {
-    var paper    = Snap('#' + id);
-    var centerXP = document.getElementById(id).offsetWidth / 2;
-    var centerYP = document.getElementById(id).offsetHeight / 2;
-    var _this      = this;
-    this.configs   = {};
-    this.round     = new RoundifyCircle(paper, centerXP, centerYP);
-    this.legend    = new Legend(paper, centerXP, centerYP);
-    this.mainData  = new MainData(paper, centerXP, centerYP);
-    this.default   = {
-        circle : {
-            pos       : 'center',
-            radius    : 100,
-            nowPoint  : 0,
-            stroke    : 8,
-            colors    : ['#3498db', '#1abc9c', '#9b59b6'],
-            animation : {
-                type : 'parallel' // match : /parallel|smooth|false/
-            }
-        },
-        legend : {
-            pos    : 'right',
-            colors : ['#3498db', '#1abc9c', '#9b59b6'],
-            font   : {
-                fontFamily : '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                fontSize   : '14px',
-                fill       : '#575757'
-            }
-        },
-        mainData : {
-            value : '32%'
-        }
-    };
-
-    this.init = function() {
-        this.configs = configs ? this.extend(this.default, configs) : this.default;
-        this.configs.legend.radius = this.configs.circle.radius;
-
-        var positions = guessCirclePos(_this.configs.legend.pos || false);
-        this.configs.circle.pos = positions.circle;
-        this.configs.legend.pos = positions.legend;
-        this.round.init(data, _this.configs.circle);
-        this.legend.init(data, _this.configs.legend);
-    };
+    'use strict';
 
     /**
-     * Permet de merge les configurations
-     * de default et celle apporté par l'utilisateur
+     * TODO :
+     *    - Créer un objet widget comprenant Roundify
+     *    - Possibilité de créer une légende
+     *    - Possibilité d'intégrer un chiffre middle
      *
-     * @param  {Object} defaultConfigs
-     * @param  {Object} extendConfigs
-     * @return {Object} configs
      */
-    this.extend = function extend(_out) {
-        var out = _out || {};
+    var Roundify = function Roundify(element, data, configs) {
 
-        for (var i = 1; i < arguments.length; i++) {
-            var obj = arguments[i];
+        var uniqNclass = element.attr('class');
+        var paper      = Snap('.' + uniqNclass);
 
-            if (!obj) {
-                continue;
+        var W          = document.querySelectorAll('.' + uniqNclass)[0].clientWidth;
+        var H          = document.querySelectorAll('.' + uniqNclass)[0].clientHeight;
+        var centerXP   = W / 2;
+        var centerYP   = H / 2;
+        var _this      = this;
+        this.configs   = {};
+        this.round     = new RoundifyCircle(paper, centerXP, centerYP);
+        this.legend    = new Legend(paper, centerXP, centerYP);
+        this.mainData  = new MainData(paper, centerXP, centerYP);
+        this.default   = {
+            padding : 20,
+            circle  : {
+                pos       : 'center',
+                nowPoint  : 0,
+                stroke    : 8,
+                colors    : ['#3498db', '#1abc9c', '#9b59b6'],
+                animation : {
+                    type : 'parallel' // match : /parallel|smooth|false/
+                }
+            },
+            legend : {
+                pos    : 'right',
+                colors : ['#3498db', '#1abc9c', '#9b59b6'],
+                font   : {
+                    fontFamily : '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                    fontSize   : '14px',
+                    fill       : '#575757'
+                }
+            },
+            mainData : {
+                value : '32%'
             }
+        };
 
-            for (var key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    if (typeof obj[key] === 'object') {
-                        _this.extend(out[key], obj[key]);
-                    }
-                    else {
-                        out[key] = obj[key];
+        /**
+         * Initiation du chart roundify
+         */
+        this.init = function() {
+            this.configs = configs ? this.extend(this.default, configs) : this.default;
+
+            this.configs.circle.radius = guessCircleRadius();
+            this.configs.legend.radius = this.configs.circle.radius;
+
+            centerXP = (_this.configs.width || W) / 2;
+            centerYP = (_this.configs.height || H) / 2;
+
+            var positions = guessCirclePos(_this.configs.legend.pos || false);
+            var chart = paper.g();
+
+            this.configs.circle.pos = positions.circle;
+            this.configs.legend.pos = positions.legend;
+
+            var round  = this.round.init(data, _this.configs.circle);
+            var legend = this.legend.init(data, _this.configs.legend);
+
+            chart.append(round);
+            chart.append(legend);
+        };
+
+        /**
+         * Permet de merge les configurations
+         * de default et celle apporté par l'utilisateur
+         *
+         * @param  {Object} defaultConfigs
+         * @param  {Object} extendConfigs
+         * @return {Object} configs
+         */
+        this.extend = function extend(_out) {
+            var out = _out || {};
+
+            for (var i = 1; i < arguments.length; i++) {
+                var obj = arguments[i];
+
+                if (!obj) {
+                    continue;
+                }
+
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        if (typeof obj[key] === 'object') {
+                            _this.extend(out[key], obj[key]);
+                        }
+                        else {
+                            out[key] = obj[key];
+                        }
                     }
                 }
             }
+
+            return out;
+        };
+
+        /**
+         * @private
+         * Set le radius du cercle en fonction
+         * de la width
+         */
+        function guessCircleRadius() {
+            var radius = 0;
+
+            // Si la width est supérieur à la height,
+            // le radius est celui de la height
+            if (W >= H) {
+                radius = (H / 2) - (_this.configs.padding * 2);
+            }
+            else {
+                radius = (W / 2) - (_this.configs.padding * 2);
+            }
+
+            return radius;
         }
 
-        return out;
+        /**
+         * @private
+         * Set la position du cercle en fonction
+         * de la position de la légend
+         *
+         * @param  {String} legendPos
+         * @return {String} position
+         */
+        function guessCirclePos(legendPos) {
+            var position;
+
+            switch (legendPos) {
+                case 'right':
+                    position = {
+                        circle : {x : _this.configs.padding + _this.configs.legend.radius, y : 0},
+                        legend : {x : _this.configs.legend.radius * 2 + 50, y : centerYP}
+                    };
+                    break;
+                case 'bottom':
+                    position = {
+                        circle : {x : centerXP, y : _this.configs.padding + _this.configs.legend.radius},
+                        legend : {x : centerXP, y : _this.configs.padding + _this.configs.legend.radius * 2}
+                    };
+                    break;
+                default:
+                    position = {x : centerXP, y : centerYP};
+                    break;
+            }
+
+            return position;
+        }
+
+
+        this.init();
     };
 
-    /**
-     * @private
-     * Set la position du cercle en fonction
-     * de la position de la légend
-     *
-     * @param  {String} legendPos
-     * @return {String} position
-     */
-    function guessCirclePos(legendPos) {
-        var position;
 
-        switch (legendPos) {
-            case 'right':
-                position = {
-                    circle : {x : 10 + _this.configs.legend.radius, y : centerYP},
-                    legend : {x : _this.configs.legend.radius * 2 + 50, y : centerYP}
-                };
-                break;
-            case 'bottom':
-                position = {x : centerXP, y : 10 + _this.configs.legend.radius};
-                break;
-            default:
-                position = {x : centerXP, y : centerYP};
-                break;
-        }
+    var $ = angular.element;
 
-        return position;
-    }
+    $.prototype.roundify = function(data, configs) {
+        this.round = new Roundify(this, data, configs);
 
+        return this;
+    };
 
-    this.init();
-};
-
-var roundify = function(id, data, configs) {
-    return new Roundify(id, data, configs);
-};
+})();

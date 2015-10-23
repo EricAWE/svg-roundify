@@ -6,7 +6,7 @@ var $       = require('gulp-load-plugins')();
 
 var paths = {
     src : {
-        js : path.join(__dirname, 'src/**.js')
+        js : path.join(__dirname, 'src/**/*.js')
     },
     dist : {
         js : path.join(__dirname, '/dist')
