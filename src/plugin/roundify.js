@@ -24,11 +24,9 @@
         this.legend    = new Legend(paper, centerXP, centerYP);
         this.mainData  = new MainData(paper, centerXP, centerYP);
         this.default   = {
-            width  : 600,
-            height : 600,
-            circle : {
+            padding : 20,
+            circle  : {
                 pos       : 'center',
-                radius    : 100,
                 nowPoint  : 0,
                 stroke    : 8,
                 colors    : ['#3498db', '#1abc9c', '#9b59b6'],
@@ -55,6 +53,8 @@
          */
         this.init = function() {
             this.configs = configs ? this.extend(this.default, configs) : this.default;
+
+            this.configs.circle.radius = guessCircleRadius();
             this.configs.legend.radius = this.configs.circle.radius;
 
             centerXP = (_this.configs.width || W) / 2;
@@ -65,6 +65,7 @@
 
             this.configs.circle.pos = positions.circle;
             this.configs.legend.pos = positions.legend;
+
             var round  = this.round.init(data, _this.configs.circle);
             var legend = this.legend.init(data, _this.configs.legend);
 
@@ -107,6 +108,26 @@
 
         /**
          * @private
+         * Set le radius du cercle en fonction
+         * de la width
+         */
+        function guessCircleRadius() {
+            var radius = 0;
+
+            // Si la width est supérieur à la height,
+            // le radius est celui de la height
+            if (W >= H) {
+                radius = (H / 2) - (_this.configs.padding * 2);
+            }
+            else {
+                radius = (W / 2) - (_this.configs.padding * 2);
+            }
+
+            return radius;
+        }
+
+        /**
+         * @private
          * Set la position du cercle en fonction
          * de la position de la légend
          *
@@ -119,12 +140,15 @@
             switch (legendPos) {
                 case 'right':
                     position = {
-                        circle : {x : 10 + _this.configs.legend.radius, y : centerYP},
+                        circle : {x : _this.configs.padding + _this.configs.legend.radius, y : 0},
                         legend : {x : _this.configs.legend.radius * 2 + 50, y : centerYP}
                     };
                     break;
                 case 'bottom':
-                    position = {x : centerXP, y : 10 + _this.configs.legend.radius};
+                    position = {
+                        circle : {x : centerXP, y : _this.configs.padding + _this.configs.legend.radius},
+                        legend : {x : centerXP, y : _this.configs.padding + _this.configs.legend.radius * 2}
+                    };
                     break;
                 default:
                     position = {x : centerXP, y : centerYP};

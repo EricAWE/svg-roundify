@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>SVG Round</title>
         <style>
-            .hey { width : 600px; height : 600px; background-color: #F0F0F0; }
+            .hey { width : 430px; height : 220px; background-color: #F0F0F0; }
         </style>
     </head>
     <body>
@@ -46,7 +46,6 @@
 
             var options = {
                 circle : {
-                    radius    : 100,
                     animation : {
                         type : 'parallel'
                     }
@@ -63,7 +62,6 @@
             function demoController($scope) {
                 $scope.rounddata = {data : data, options : options};
             }
-            //roundify(data, options);
         </script>
 
         <div ng-controller="DemoController as demoController">

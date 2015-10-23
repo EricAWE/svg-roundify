@@ -21,7 +21,7 @@
 
             lines
                 .attr({
-                    transform : 'translate(0, -' + lines.getBBox().height / 2 + ')'
+                    //transform : 'translate(0, -' + lines.getBBox().height + ')'
                 })
                 .animate({
                     opacity : 1
@@ -37,6 +37,7 @@
                 });
             var posx  = _this.configs.pos.x;
             var posy  = _this.configs.pos.y;
+            console.log(posy);
 
             data.forEach(function(serie, k) {
                 var color = serie.color || colors[k];

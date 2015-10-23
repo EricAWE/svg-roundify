@@ -25,7 +25,6 @@
          *
          */
         this.init = function() {
-
             // Initialisation lier à l'animation de la path
             var color        = data.color || _color;
             var total        = data.percent;

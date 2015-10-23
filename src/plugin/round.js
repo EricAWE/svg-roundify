@@ -1,7 +1,10 @@
-'use strict';
-
 /**
  * Créer un cercle en fonction de la data passé
+ *
+ * TODO :
+ *    - Rendre responsive le widget
+ *        - L'adapter en pourcentage
+ *        - Le forcer à prendre la taille de son conteneur
  *
  * @param {Object} _data
  *    - value : valeur de la série
@@ -12,13 +15,13 @@
 
 
 (function(w) {
+    'use strict';
+
     var RoundifyCircle = function RoundifyCircle(_paper, _centerXP, _centerYP) {
 
         var _this      = this;
         var animePoint = 0;
         var paper      = _paper;
-        var centerXP   = _centerXP;
-        var centerYP   = _centerYP;
         this.arcs      = [];
         this.configs   = {};
 
@@ -127,13 +130,12 @@
          */
         function animateParallel() {
             var arcs = _this.arcs;
-
             arcs.forEach(function(arc) {
                 Snap.animate(0, arc.loopLength,
                     function(step) {
                         arc.draw.attr({
                             path        : Snap.path.getSubpath(arc.path, 0, step),
-                            transform   : 'translate(' + _this.configs.pos.x * 2 + '), scale(-1, 1)',
+                            transform   : 'translate(' + _this.configs.pos.x * 2 + ' ' + (_this.configs.radius + 40) + ') scale(-1, 1)',
                             strokeWidth : _this.configs.stroke
                         });
                     },
