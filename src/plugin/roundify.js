@@ -10,12 +10,10 @@
      *
      */
     var Roundify = function Roundify(element, data, configs) {
+        var paper      = Snap(element[0]);
 
-        var uniqNclass = element.attr('class');
-        var paper      = Snap('.' + uniqNclass);
-
-        var W          = configs.width  || document.querySelectorAll('.' + uniqNclass)[0].clientWidth;
-        var H          = configs.height || document.querySelectorAll('.' + uniqNclass)[0].clientHeight;
+        var W          = configs.width  || element.prop('offsetWidth');
+        var H          = configs.height || element.prop('offsetHeight');
         var centerXP   = W / 2;
         var centerYP   = H / 2;
         var _this      = this;
