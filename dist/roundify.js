@@ -333,7 +333,7 @@
                 function(step) {
                     arcs[animePoint].draw.attr({
                         path        : Snap.path.getSubpath(arcs[animePoint].path, 0, step),
-                        transform   : 'translate(' + _this.configs.pos.x * 2 + '), scale(-1, 1)',
+                        transform   : 'translate(0 ' + (_this.configs.radius + 40) + ') scale(1, 1)',
                         strokeWidth : _this.configs.stroke
                     });
                 },
@@ -362,7 +362,7 @@
                     function(step) {
                         arc.draw.attr({
                             path        : Snap.path.getSubpath(arc.path, 0, step),
-                            transform   : 'translate(' + _this.configs.pos.x * 2 + ' ' + (_this.configs.radius + 40) + ') scale(-1, 1)',
+                            transform   : 'translate(0 ' + (_this.configs.radius + 40) + ') scale(1, 1)',
                             strokeWidth : _this.configs.stroke
                         });
                     },
@@ -383,7 +383,7 @@
             arcs.forEach(function(arc) {
                 arc.draw.attr({
                     path        : Snap.path.getSubpath(arc.path, 0, arc.loopLength),
-                    transform   : 'translate(' + _this.configs.pos.x * 2 + '), scale(-1, 1)',
+                    transform   : 'translate(0 ' + (_this.configs.radius + 40) + ') scale(1, 1)',
                     strokeWidth : _this.configs.stroke
                 });
             });
