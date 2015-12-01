@@ -410,7 +410,6 @@
          *
          */
         function animateParallel() {
-            console.log('parallel');
             var arcs = _this.arcs;
             arcs.forEach(function(arc) {
                 Snap.animate(0, arc.loopLength,
@@ -434,7 +433,6 @@
          */
         function animateFalse() {
             var arcs = _this.arcs;
-            console.log('coucou');
             arcs.forEach(function(arc) {
                 arc.draw.attr({
                     path        : Snap.path.getSubpath(arc.path, 0, arc.loopLength),
@@ -492,7 +490,7 @@
                    stroke    : 8,
                    colors    : ['#3498db', '#1abc9c', '#9b59b6'],
                    animation : {
-                       type : 'none' // match : /parallel|smooth|none/
+                       type : 'parallel' // match : /parallel|smooth|none/
                    }
                },
                legend : {
