@@ -40,9 +40,7 @@
                     fill       : '#575757'
                 }
             },
-            mainData : {
-                value : '32%'
-            }
+            mainData : {}
         };
 
         /**
@@ -50,7 +48,6 @@
          */
         this.init = function() {
             this.configs = configs ? this.extend(this.default, configs) : this.default;
-
             this.configs.circle.radius = guessCircleRadius();
             this.configs.legend.radius = this.configs.circle.radius;
 
@@ -64,6 +61,11 @@
             this.configs.legend.pos = positions.legend;
             var round  = this.round.init(data, _this.configs.circle);
             var legend = this.legend.init(data, _this.configs.legend);
+
+            if (this.configs.mainData && this.configs.mainData.value) {
+                var mainData = this.mainData.init(_this.configs);
+                chart.append(mainData);
+            }
 
             chart.append(round);
             chart.append(legend);
@@ -141,7 +143,7 @@
             switch (legendPos) {
                 case 'right':
                     position = {
-                        circle : {x : _this.configs.padding + _this.configs.legend.radius, y : ((H - (_this.configs.circle.radius * 2)) / 2 - 40)},
+                        circle : {x : _this.configs.padding + _this.configs.legend.radius, y : ((H - (_this.configs.circle.radius * 2)) / 2 - _this.configs.padding * 2)},
                         legend : {x : _this.configs.legend.radius * 2 + 50, y : centerYP}
                     };
                     break;
