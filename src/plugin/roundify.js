@@ -107,31 +107,9 @@
          * Set le radius du cercle en fonction
          * de la width
          */
-        function guessLegendWidth() {
-            var width = 0;
-            var maxWidth = 0;
-
-            data.forEach(function(value) {
-                var namelength  = value.name.length * _this.configs.legend.font.fontSize.split('px')[0];
-                var valuelength = value.value.toString().length * _this.configs.legend.font.fontSize.split('px')[0];
-                width = namelength + valuelength + 70;
-
-                if (width > maxWidth) {
-                    maxWidth = width;
-                }
-            });
-
-            return width;
-        }
-
-        /**
-         * @private
-         * Set le radius du cercle en fonction
-         * de la width
-         */
         function guessCircleRadius() {
             var radius = 0;
-            var legendWidth = guessLegendWidth();
+            var legendWidth = _this.legend.getLegendMinWidth(data, _this.configs.legend);
 
             // Si la width est supérieur à la height,
             // le radius est celui de la height

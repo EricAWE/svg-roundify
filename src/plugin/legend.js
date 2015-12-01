@@ -34,6 +34,7 @@
                 });
             var posx  = _this.configs.pos.x;
             var posy  = _this.configs.pos.y;
+            var minWidth = _this.getLegendMinWidth(data, _this.configs);
 
             data.forEach(function(serie, k) {
                 var color = serie.color || colors[k];
@@ -52,7 +53,7 @@
                     });
 
                 var result = paper
-                    .text(posx + 200, posy, serie.value.toString())
+                    .text(posx + minWidth, posy, serie.value.toString())
                     .attr({
                         fontFamily : _this.configs.font.fontFamily,
                         fontSize   : _this.configs.font.fontSize,
@@ -66,6 +67,27 @@
             });
 
             return lines;
+        };
+
+        /**
+         * Calcul le minimum de marge necessaire pour la legend
+         *
+         * @param  {Object} data
+         * @return {Number} minWidth
+         */
+        this.getLegendMinWidth = function getLegendMinWidth(data, configs) {
+            var width    = 0;
+            var minWidth = 0;
+
+            data.forEach(function(value) {
+                width = value.name.length * configs.font.fontSize.split('px')[0] + 90;
+
+                if (width > minWidth) {
+                    minWidth = width;
+                }
+            });
+
+            return minWidth;
         };
     };
 
