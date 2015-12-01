@@ -366,6 +366,9 @@
                 case 'parallel' :
                     animateParallel();
                     break;
+                case 'none' :
+                    animateFalse();
+                    break;
                 default :
                     animateFalse();
             }
@@ -407,6 +410,7 @@
          *
          */
         function animateParallel() {
+            console.log('parallel');
             var arcs = _this.arcs;
             arcs.forEach(function(arc) {
                 Snap.animate(0, arc.loopLength,
@@ -430,7 +434,7 @@
          */
         function animateFalse() {
             var arcs = _this.arcs;
-
+            console.log('coucou');
             arcs.forEach(function(arc) {
                 arc.draw.attr({
                     path        : Snap.path.getSubpath(arc.path, 0, arc.loopLength),
@@ -456,43 +460,60 @@
      *
      */
     var Roundify = function Roundify(element, data, configs) {
-        var paper      = Snap(element[0]);
-        var W          = configs.width  || element.prop('offsetWidth');
-        var H          = configs.height || element.prop('offsetHeight');
-        var centerXP   = W / 2;
-        var centerYP   = H / 2;
+        var paper;
+        var W;
+        var H;
+        var centerXP;
+        var centerYP;
         var _this      = this;
-        this.configs   = {};
-        this.round     = new RoundifyCircle(paper, centerXP, centerYP);
-        this.legend    = new Legend(paper, centerXP, centerYP);
-        this.mainData  = new MainData(paper, centerXP, centerYP);
-        this.default   = {
-            padding : 20,
-            circle  : {
-                pos       : 'center',
-                nowPoint  : 0,
-                stroke    : 8,
-                colors    : ['#3498db', '#1abc9c', '#9b59b6'],
-                animation : {
-                    type : 'parallel' // match : /parallel|smooth|false/
-                }
-            },
-            legend : {
-                pos    : 'right',
-                colors : ['#3498db', '#1abc9c', '#9b59b6'],
-                font   : {
-                    fontFamily : '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                    fontSize   : '14px',
-                    fill       : '#575757'
-                }
-            },
-            mainData : {}
+        this.chart   = null;
+        this.configs = {};
+        this.round = null;
+        this.legend = null;
+        this.mainData = null;
+        this.chart = null;
+        this.default  = null;
+
+        this.initVariables = function() {
+            paper    = Snap(element[0]);
+            W        = configs.width  || element.prop('offsetWidth');
+            H        = configs.height || element.prop('offsetHeight');
+            centerXP = W / 2;
+            centerYP = H / 2;
+
+            this.round    = new RoundifyCircle(paper, centerXP, centerYP);
+            this.legend   = new Legend(paper, centerXP, centerYP);
+            this.mainData = new MainData(paper, centerXP, centerYP);
+            this.default = {
+               padding : 20,
+               circle  : {
+                   pos       : 'center',
+                   nowPoint  : 0,
+                   stroke    : 8,
+                   colors    : ['#3498db', '#1abc9c', '#9b59b6'],
+                   animation : {
+                       type : 'none' // match : /parallel|smooth|none/
+                   }
+               },
+               legend : {
+                   pos    : 'right',
+                   colors : ['#3498db', '#1abc9c', '#9b59b6'],
+                   font   : {
+                       fontFamily : '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                       fontSize   : '14px',
+                       fill       : '#575757'
+                   }
+               },
+               mainData : {}
+           };
         };
 
         /**
          * Initiation du chart roundify
          */
         this.init = function() {
+            this.first = this.first ? false : true;
+            this.initVariables();
             this.configs = configs ? this.extend(this.default, configs) : this.default;
             this.configs.circle.radius = guessCircleRadius();
             this.configs.legend.radius = this.configs.circle.radius;
@@ -501,7 +522,7 @@
             centerYP = (_this.configs.height || H) / 2;
 
             var positions = guessCirclePos(_this.configs.legend.pos || false);
-            var chart = paper.g();
+            this.chart = paper.g();
 
             this.configs.circle.pos = positions.circle;
             this.configs.legend.pos = positions.legend;
@@ -510,11 +531,11 @@
 
             if (this.configs.mainData && this.configs.mainData.value) {
                 var mainData = this.mainData.init(_this.configs);
-                chart.append(mainData);
+                this.chart.append(mainData);
             }
 
-            chart.append(round);
-            chart.append(legend);
+            this.chart.append(round);
+            this.chart.append(legend);
         };
 
         /**
@@ -615,7 +636,13 @@
     var $ = angular.element;
 
     $.prototype.roundify = function(data, configs) {
+        var _this = this;
         this.round = new Roundify(this, data, configs);
+
+        $(window).on('resize', function() {
+            _this.round.chart.remove();
+            _this.round.init();
+        });
 
         return this;
     };
