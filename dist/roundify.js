@@ -21,7 +21,6 @@
         return directive;
 
         function svgRoundifyLink(scope, element) {
-            //console.log(scope);
             var $round = element.append('<svg class="svg-round"></svg>').children();
             $round.roundify(scope.config.data, scope.config.options);
         }
@@ -140,12 +139,10 @@
  */
 
 (function(window) {
-    var Legend = function Legend(_paper, _centerXP, _centerYP) {
+    var Legend = function Legend(_paper) {
 
         var _this = this;
         var paper      = _paper;
-        var centerXP   = _centerXP;
-        var centerYP   = _centerYP;
 
         this.init = function init(data, configs) {
             this.configs = configs;
@@ -188,7 +185,7 @@
                     });
 
                 var result = paper
-                    .text(posx + 200, posy, serie.value)
+                    .text(posx + 200, posy, serie.value.toString())
                     .attr({
                         fontFamily : _this.configs.font.fontFamily,
                         fontSize   : _this.configs.font.fontSize,
@@ -268,11 +265,15 @@
             var data = this.convertToPercent(_data);
 
             // 3. Construit les arcs composant le cercle
+            var i = 0;
             data.forEach(function(v, k) {
-                _this.arcs.push(new Arc(v, _this.configs.nowPoint, _this.configs.colors[k], _this.configs, _paper, _centerXP, _centerYP));
-                _this.configs.nowPoint = _this.arcs[k].getEndPoint();
+                if (v.percent > 2) {
+                    _this.arcs.push(new Arc(v, _this.configs.nowPoint, _this.configs.colors[k], _this.configs, _paper, _centerXP, _centerYP));
+                    _this.configs.nowPoint = _this.arcs[i].getEndPoint();
 
-                round.add(_this.arcs[k].draw);
+                    round.add(_this.arcs[i].draw);
+                    i++;
+                }
             });
 
             // 4. Met un setTimeout et lance l'animation
@@ -459,7 +460,6 @@
 
             this.configs.circle.pos = positions.circle;
             this.configs.legend.pos = positions.legend;
-
             var round  = this.round.init(data, _this.configs.circle);
             var legend = this.legend.init(data, _this.configs.legend);
 
