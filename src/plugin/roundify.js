@@ -11,7 +11,6 @@
      */
     var Roundify = function Roundify(element, data, configs) {
         var paper      = Snap(element[0]);
-
         var W          = configs.width  || element.prop('offsetWidth');
         var H          = configs.height || element.prop('offsetHeight');
         var centerXP   = W / 2;
@@ -108,8 +107,31 @@
          * Set le radius du cercle en fonction
          * de la width
          */
+        function guessLegendWidth() {
+            var width = 0;
+            var maxWidth = 0;
+
+            data.forEach(function(value) {
+                var namelength  = value.name.length * _this.configs.legend.font.fontSize.split('px')[0];
+                var valuelength = value.value.toString().length * _this.configs.legend.font.fontSize.split('px')[0];
+                width = namelength + valuelength + 70;
+
+                if (width > maxWidth) {
+                    maxWidth = width;
+                }
+            });
+
+            return width;
+        }
+
+        /**
+         * @private
+         * Set le radius du cercle en fonction
+         * de la width
+         */
         function guessCircleRadius() {
             var radius = 0;
+            var legendWidth = guessLegendWidth();
 
             // Si la width est supérieur à la height,
             // le radius est celui de la height
@@ -118,6 +140,10 @@
             }
             else {
                 radius = (W / 2) - (_this.configs.padding * 2);
+            }
+
+            if (W - legendWidth < radius * 2) {
+                radius = ((W - legendWidth) / 2) - (_this.configs.padding * 2);
             }
 
             return radius;
@@ -137,7 +163,7 @@
             switch (legendPos) {
                 case 'right':
                     position = {
-                        circle : {x : _this.configs.padding + _this.configs.legend.radius, y : 0},
+                        circle : {x : _this.configs.padding + _this.configs.legend.radius, y : ((H - (_this.configs.circle.radius * 2)) / 2 - 40)},
                         legend : {x : _this.configs.legend.radius * 2 + 50, y : centerYP}
                     };
                     break;
