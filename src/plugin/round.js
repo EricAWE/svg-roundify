@@ -40,11 +40,15 @@
             var data = this.convertToPercent(_data);
 
             // 3. Construit les arcs composant le cercle
+            var i = 0;
             data.forEach(function(v, k) {
-                _this.arcs.push(new Arc(v, _this.configs.nowPoint, _this.configs.colors[k], _this.configs, _paper, _centerXP, _centerYP));
-                _this.configs.nowPoint = _this.arcs[k].getEndPoint();
+                if (v.percent > 2) {
+                    _this.arcs.push(new Arc(v, _this.configs.nowPoint, _this.configs.colors[k], _this.configs, _paper, _centerXP, _centerYP));
+                    _this.configs.nowPoint = _this.arcs[i].getEndPoint();
 
-                round.add(_this.arcs[k].draw);
+                    round.add(_this.arcs[i].draw);
+                    i++;
+                }
             });
 
             // 4. Met un setTimeout et lance l'animation

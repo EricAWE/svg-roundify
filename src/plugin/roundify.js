@@ -63,7 +63,6 @@
 
             this.configs.circle.pos = positions.circle;
             this.configs.legend.pos = positions.legend;
-
             var round  = this.round.init(data, _this.configs.circle);
             var legend = this.legend.init(data, _this.configs.legend);
 

@@ -6,12 +6,10 @@
  */
 
 (function(window) {
-    var Legend = function Legend(_paper, _centerXP, _centerYP) {
+    var Legend = function Legend(_paper) {
 
         var _this = this;
         var paper      = _paper;
-        var centerXP   = _centerXP;
-        var centerYP   = _centerYP;
 
         this.init = function init(data, configs) {
             this.configs = configs;
@@ -54,7 +52,7 @@
                     });
 
                 var result = paper
-                    .text(posx + 200, posy, serie.value)
+                    .text(posx + 200, posy, serie.value.toString())
                     .attr({
                         fontFamily : _this.configs.font.fontFamily,
                         fontSize   : _this.configs.font.fontSize,

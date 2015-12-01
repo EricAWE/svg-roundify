@@ -21,7 +21,6 @@
         return directive;
 
         function svgRoundifyLink(scope, element) {
-            //console.log(scope);
             var $round = element.append('<svg class="svg-round"></svg>').children();
             $round.roundify(scope.config.data, scope.config.options);
         }
