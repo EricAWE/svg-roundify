@@ -136,7 +136,6 @@
          *
          */
         function animateParallel() {
-            console.log('parallel');
             var arcs = _this.arcs;
             arcs.forEach(function(arc) {
                 Snap.animate(0, arc.loopLength,
@@ -160,7 +159,6 @@
          */
         function animateFalse() {
             var arcs = _this.arcs;
-            console.log('coucou');
             arcs.forEach(function(arc) {
                 arc.draw.attr({
                     path        : Snap.path.getSubpath(arc.path, 0, arc.loopLength),

@@ -42,7 +42,7 @@
                    stroke    : 8,
                    colors    : ['#3498db', '#1abc9c', '#9b59b6'],
                    animation : {
-                       type : 'none' // match : /parallel|smooth|none/
+                       type : 'parallel' // match : /parallel|smooth|none/
                    }
                },
                legend : {
