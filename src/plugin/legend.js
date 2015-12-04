@@ -16,10 +16,19 @@
             this.data    = data;
 
             var lines = this.constructLegend(data, _this.configs.colors);
+
+            if (configs.pos.name === 'right') {
+                lines.attr({
+                    transform : 'translate(0, -' + ((lines.getBBox().height / 2) - 10) + ')'
+                });
+            }
+            else {
+                lines.attr({
+                    transform : 'translate(-' + (lines.getBBox().width / 2) + ', 0)'
+                });
+            }
+
             lines
-                .attr({
-                    transform : 'translate(0, -' + (lines.getBBox().height / 2 - 10) + ')'
-                })
                 .animate({
                     opacity : 1
                 }, 600);
@@ -88,6 +97,22 @@
             });
 
             return minWidth;
+        };
+
+        /**
+         * Calcul le minimum de marge necessaire pour la legend
+         *
+         * @param  {Object} data
+         * @return {Number} minWidth
+         */
+        this.getLegendMinHeight = function getLegendMinHeight(data, configs) {
+            var height = 0;
+
+            data.forEach(function() {
+                height += parseInt(configs.font.fontSize.split('px')[0]) + 10;
+            });
+
+            return height + 40;
         };
     };
 

@@ -15,7 +15,7 @@
 
             number
                 .attr({
-                    transform : 'translate(' + configs.circle.pos.x + ', ' + (centerYP + (font / 4)) + ')'
+                    transform : 'translate(' + configs.circle.pos.x + ', ' + (configs.circle.pos.y + configs.circle.radius + (font/4)) + ')'
                 });
 
             var text = paper

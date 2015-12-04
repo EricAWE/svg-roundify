@@ -128,19 +128,31 @@
          */
         function guessCircleRadius() {
             var radius = 0;
-            var legendWidth = _this.legend.getLegendMinWidth(data, _this.configs.legend);
 
-            // Si la width est supérieur à la height,
-            // le radius est celui de la height
-            if (W >= H) {
-                radius = (H / 2) - (_this.configs.padding * 2);
+            if (_this.configs.legend.pos === 'right') {
+                var legendWidth = _this.legend.getLegendMinWidth(data, _this.configs.legend);
+
+                // Si la width est supérieur à la height,
+                // le radius est celui de la height
+                if (W >= H) {
+                    radius = (H / 2) - (_this.configs.padding * 2);
+                }
+                else {
+                    radius = (W / 2) - (_this.configs.padding * 2);
+                }
+
+                if (W - legendWidth < radius * 2) {
+                    radius = ((W - legendWidth) / 2) - (_this.configs.padding * 2);
+                }
             }
             else {
-                radius = (W / 2) - (_this.configs.padding * 2);
-            }
+                var legendHeight = _this.legend.getLegendMinHeight(data, _this.configs.legend);
 
-            if (W - legendWidth < radius * 2) {
-                radius = ((W - legendWidth) / 2) - (_this.configs.padding * 2);
+                radius = (H - legendHeight - 40) / 2;
+
+                if ((radius * 2) > (W - 40)) {
+                    radius = (W - 40) / 2;
+                }
             }
 
             return radius;
@@ -160,14 +172,14 @@
             switch (legendPos) {
                 case 'right':
                     position = {
-                        circle : {x : _this.configs.padding + _this.configs.legend.radius, y : ((H - (_this.configs.circle.radius * 2)) / 2 - _this.configs.padding * 2)},
-                        legend : {x : _this.configs.legend.radius * 2 + 50, y : centerYP}
+                        circle : {x : _this.configs.padding + _this.configs.legend.radius, y : ((H - (_this.configs.circle.radius * 2)) / 2 ), name : 'right'},
+                        legend : {x : _this.configs.legend.radius * 2 + 50, y : centerYP, name : 'right'}
                     };
                     break;
                 case 'bottom':
                     position = {
-                        circle : {x : centerXP, y : _this.configs.padding + _this.configs.legend.radius},
-                        legend : {x : centerXP, y : _this.configs.padding + _this.configs.legend.radius * 2}
+                        circle : {x : centerXP, y : _this.configs.padding, name : 'bottom'},
+                        legend : {x : centerXP, y : _this.configs.padding + (_this.configs.circle.radius * 2) + 60, name : 'bottom' }
                     };
                     break;
                 default:

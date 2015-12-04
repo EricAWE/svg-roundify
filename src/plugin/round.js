@@ -142,7 +142,7 @@
                     function(step) {
                         arc.draw.attr({
                             path        : Snap.path.getSubpath(arc.path, 0, step),
-                            transform   : 'translate(0 ' + (_this.configs.radius + 40) + ') scale(1, 1)',
+                            transform   : 'translate(0 ' + (_this.configs.radius) + ') scale(1, 1)',
                             strokeWidth : _this.configs.stroke
                         });
                     },
