@@ -65,6 +65,11 @@
             this.first = this.first ? false : true;
             this.initVariables();
             this.configs = configs ? this.extend(this.default, configs) : this.default;
+
+            if (W < 400) {
+                this.configs.legend.pos = 'bottom';
+            }
+
             this.configs.circle.radius = guessCircleRadius();
             this.configs.legend.radius = this.configs.circle.radius;
 
