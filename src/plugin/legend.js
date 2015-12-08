@@ -112,7 +112,7 @@
                 height += parseInt(configs.font.fontSize.split('px')[0]) + 10;
             });
 
-            return height + 40;
+            return height + 60;
         };
     };
 
